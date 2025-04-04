@@ -1,73 +1,66 @@
-# Welcome to your Lovable project
+# NoLeet
 
-## Project info
+NoLeet is a modern job board platform connecting talent with opportunities in the cryptocurrency and blockchain industry. Built with React, TypeScript, and Tailwind CSS, it provides a seamless experience for both job seekers and employers.
 
-**URL**: https://lovable.dev/projects/fb4ca8e7-178a-4909-966f-c908dde753c6
+## Features
 
-## How can I edit this code?
+- **Job Listings**: Browse through curated cryptocurrency and blockchain job opportunities
+- **Company Profiles**: Detailed company information and available positions
+- **Search & Filter**: Easy-to-use search functionality with multiple filtering options
+- **Responsive Design**: Optimized for both desktop and mobile viewing
+- **Modern UI**: Built with Tailwind CSS for a clean, modern interface
 
-There are several ways of editing your application.
+## Getting Started
 
-**Use Lovable**
+### Prerequisites
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/fb4ca8e7-178a-4909-966f-c908dde753c6) and start prompting.
+- Node.js (LTS version)
+- npm or yarn package manager
 
-Changes made via Lovable will be committed automatically to this repo.
+### Installation
 
-**Use your preferred IDE**
+1. Clone the repository
+```bash
+git clone https://github.com/itsksaurabh/crypto-career-connect.git
+cd crypto-career-connect
+```
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+2. Install dependencies
+```bash
+npm install
+```
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
+3. Start the development server
+```bash
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+The application will be available at `http://localhost:8080`
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## Project Structure
 
-**Use GitHub Codespaces**
+```
+src/
+├── components/     # React components
+├── data/          # Static data and configurations
+├── hooks/         # Custom React hooks
+├── lib/           # Utility functions
+├── pages/         # Page components
+└── services/      # API services
+```
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+## Deployment
 
-## What technologies are used for this project?
+The project is configured for automatic deployment to GitHub Pages using GitHub Actions. Every push to the main branch triggers the deployment workflow.
 
-This project is built with:
+## Contributing
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
-## How can I deploy this project?
+## License
 
-Simply open [Lovable](https://lovable.dev/projects/fb4ca8e7-178a-4909-966f-c908dde753c6) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes it is!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+This project is open source and available under the MIT License.

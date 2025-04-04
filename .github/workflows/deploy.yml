@@ -29,9 +29,9 @@ jobs:
           cache: 'npm'
 
       - name: Install dependencies
-        run: npm ci
-        env:
-          NODE_ENV: production
+        run: |
+          npm install -g npm@latest
+          npm ci --legacy-peer-deps
 
       - name: Lint
         run: npm run lint || true
@@ -40,6 +40,8 @@ jobs:
         run: npm run build
         env:
           NODE_ENV: production
+          VITE_APP_TITLE: "Crypto Career Connect"
+          CI: false
 
       - name: Setup Pages
         uses: actions/configure-pages@v4

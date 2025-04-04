@@ -1,12 +1,13 @@
 
 import React, { useState, useEffect } from 'react';
-import { Search, Briefcase, Filter } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import JobCard, { JobCardProps } from '@/components/JobCard';
-import { Badge } from '@/components/ui/badge';
-import JobPostForm from '@/components/JobPostForm';
 import TypedBackground from '@/components/TypedBackground';
+import JobPostForm from '@/components/JobPostForm';
+import { JobCardProps } from '@/components/JobCard';
+import PageHeader from '@/components/PageHeader';
+import PageFooter from '@/components/PageFooter';
+import SearchBar from '@/components/SearchBar';
+import FilterTabs from '@/components/FilterTabs';
+import JobsList from '@/components/JobsList';
 import { fetchJobs } from '@/services/jobService';
 
 const Index = () => {
@@ -68,29 +69,19 @@ const Index = () => {
     setActiveFilter(activeFilter === filter ? null : filter);
   };
 
+  const clearFilter = () => {
+    setActiveFilter(null);
+  };
+
+  const toggleJobForm = () => {
+    setShowJobForm(!showJobForm);
+  };
+
   return (
     <div className="min-h-screen bg-noleet-dark text-white relative overflow-x-hidden">
       <TypedBackground />
       
-      <header className="border-b border-gray-800 bg-noleet-dark/80 backdrop-blur-lg sticky top-0 z-50">
-        <div className="container mx-auto flex items-center justify-between py-4">
-          <div className="flex items-center gap-2">
-            <img 
-              src="/lovable-uploads/f4cf0849-4e11-4bd2-9ded-05730040b25c.png" 
-              alt="Noleet" 
-              className="h-10 w-auto logo-glow"
-            />
-          </div>
-          
-          <Button 
-            className="btn-gradient" 
-            onClick={() => setShowJobForm(!showJobForm)}
-          >
-            <Briefcase size={16} className="mr-2" />
-            {showJobForm ? "Close Form" : "Post a Job"}
-          </Button>
-        </div>
-      </header>
+      <PageHeader showJobForm={showJobForm} toggleJobForm={toggleJobForm} />
       
       <main className="container mx-auto py-8 px-4">
         <div className="flex flex-col space-y-8">
@@ -103,91 +94,22 @@ const Index = () => {
                 <p className="text-gray-400">Companies that don't have a broken hiring process</p>
               </div>
               
-              <div className="glass-card p-4 flex flex-col md:flex-row gap-4">
-                <div className="flex-grow relative">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
-                  <Input 
-                    type="text" 
-                    placeholder="Job title, keywords, or company" 
-                    className="bg-secondary border-gray-700 pl-10"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                  />
-                </div>
-                <div className="flex gap-2">
-                  <Button 
-                    variant="outline" 
-                    className="border-gray-700 text-gray-300 flex gap-2"
-                    onClick={() => setActiveFilter(null)}
-                  >
-                    <Filter size={16} />
-                    Clear Filter
-                  </Button>
-                  <Button 
-                    className="btn-gradient min-w-[100px]"
-                    onClick={handleSearch}
-                  >
-                    Search
-                  </Button>
-                </div>
-              </div>
+              <SearchBar 
+                searchTerm={searchTerm} 
+                setSearchTerm={setSearchTerm} 
+                handleSearch={handleSearch} 
+                clearFilter={clearFilter} 
+              />
               
-              <div className="flex flex-wrap gap-2">
-                <Badge 
-                  className={`${activeFilter === 'Remote' ? 'bg-noleet-blue text-white' : 'bg-secondary text-gray-300'} hover:bg-secondary/80 cursor-pointer`}
-                  onClick={() => toggleFilter('Remote')}
-                >
-                  Remote
-                </Badge>
-                <Badge 
-                  className={`${activeFilter === 'Featured' ? 'bg-noleet-blue text-white' : 'bg-secondary text-gray-300'} hover:bg-secondary/80 cursor-pointer`}
-                  onClick={() => toggleFilter('Featured')}
-                >
-                  Featured
-                </Badge>
-                <Badge 
-                  className={`${activeFilter === 'Engineering' ? 'bg-noleet-blue text-white' : 'bg-secondary text-gray-300'} hover:bg-secondary/80 cursor-pointer`}
-                  onClick={() => toggleFilter('Engineering')}
-                >
-                  Engineering
-                </Badge>
-                <Badge 
-                  className={`${activeFilter === 'Frontend' ? 'bg-noleet-blue text-white' : 'bg-secondary text-gray-300'} hover:bg-secondary/80 cursor-pointer`}
-                  onClick={() => toggleFilter('Frontend')}
-                >
-                  Frontend
-                </Badge>
-              </div>
+              <FilterTabs activeFilter={activeFilter} toggleFilter={toggleFilter} />
               
-              {loading ? (
-                <div className="flex justify-center py-12">
-                  <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-noleet-blue"></div>
-                </div>
-              ) : (
-                <div className="space-y-4">
-                  {filteredJobs.length > 0 ? (
-                    filteredJobs.map(job => (
-                      <JobCard key={job.id} {...job} />
-                    ))
-                  ) : (
-                    <div className="glass-card p-8 text-center">
-                      <p className="text-lg text-gray-400">No jobs found matching your criteria.</p>
-                    </div>
-                  )}
-                </div>
-              )}
+              <JobsList loading={loading} filteredJobs={filteredJobs} />
             </>
           )}
         </div>
       </main>
       
-      <footer className="border-t border-gray-800 py-6 mt-12">
-        <div className="container mx-auto px-4">
-          <p className="text-center text-gray-400 text-sm">
-            © {new Date().getFullYear()} Noleet. The best place to find crypto and blockchain jobs.
-          </p>
-        </div>
-      </footer>
+      <PageFooter />
     </div>
   );
 };

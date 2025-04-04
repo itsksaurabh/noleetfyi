@@ -1,0 +1,21 @@
+name: Alchemy
+description: Web3 development platform
+headquarters: San Francisco, CA
+size: 200+
+website: https://www.alchemy.com
+tags: [Web3, Blockchain, Developer Tools]
+noWhiteboard: true
+interviewProcess:
+  - Initial technical screen
+  - Take-home project
+  - Architecture discussion
+  - Team fit interviews
+codingStyle:
+  - Practical problem solving
+  - Focus on scalability
+  - Clean code practices
+benefits:
+  - Competitive compensation
+  - Flexible work arrangements
+  - Learning and development budget
+  - Health and wellness benefits

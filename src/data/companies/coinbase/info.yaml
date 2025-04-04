@@ -1,0 +1,21 @@
+name: Coinbase
+description: Leading cryptocurrency exchange platform
+headquarters: San Francisco, CA
+size: 5000+
+website: https://www.coinbase.com
+tags: [Cryptocurrency, Blockchain, Fintech]
+noWhiteboard: true
+interviewProcess:
+  - Initial recruiter screen
+  - Technical coding interview
+  - System design discussion
+  - Culture fit and team matching
+codingStyle:
+  - Test-driven development
+  - Code review emphasis
+  - Modern development practices
+benefits:
+  - Competitive salary and equity
+  - Remote work flexibility
+  - Health insurance and wellness programs
+  - Crypto learning opportunities

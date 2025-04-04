@@ -9,6 +9,13 @@ const techTerms = [
   "Python", "Rust", "DevOps", "cloud", "API", "fullstack"
 ];
 
+const colors = {
+  primary: '#8B5CF6',
+  secondary: '#3B82F6',
+  accent: '#6366F1',
+  highlight: '#F472B6'
+};
+
 interface TypedTextProps {
   x: number;
   y: number;
@@ -25,14 +32,14 @@ const TypedBackground: React.FC = () => {
   
   const createRandomTexts = () => {
     const texts: TypedTextProps[] = [];
-    for (let i = 0; i < 20; i++) {
+    for (let i = 0; i < 30; i++) {
       texts.push({
         x: Math.random() * window.innerWidth,
         y: Math.random() * window.innerHeight,
         term: techTerms[Math.floor(Math.random() * techTerms.length)],
-        speed: 0.2 + Math.random() * 0.8,
-        delay: Math.random() * 5000,
-        size: 10 + Math.floor(Math.random() * 16),
+        speed: 0.3 + Math.random() * 1.2,
+        delay: Math.random() * 3000,
+        size: 12 + Math.floor(Math.random() * 20),
       });
     }
     return texts;
@@ -60,16 +67,35 @@ const TypedBackground: React.FC = () => {
         text.term = techTerms[Math.floor(Math.random() * techTerms.length)];
       }
       
-      // Draw text
-      const opacity = 0.1 + (Math.sin(time * 0.001 + index) * 0.05);
+      // Draw text with enhanced effects
+      const pulseSpeed = 0.002;
+      const baseOpacity = 0.15;
+      const pulseAmount = 0.1;
+      const opacity = baseOpacity + (Math.sin(time * pulseSpeed + index) * pulseAmount);
+      
       ctx.globalAlpha = opacity;
-      ctx.font = `${text.size}px monospace`;
-      ctx.fillStyle = text.term.includes("ethereum") || text.term.includes("DeFi") 
-        ? '#8B5CF6' 
-        : text.term.includes("bitcoin") || text.term.includes("NFT")
-          ? '#3B82F6'
-          : '#6366F1';
+      ctx.font = `${text.size}px 'JetBrains Mono', monospace`;
+      
+      // Dynamic color based on term category and time
+      const colorShift = Math.sin(time * 0.001 + index * 0.1) * 20;
+      let color = colors.accent;
+      
+      if (text.term.includes("ethereum") || text.term.includes("DeFi")) {
+        color = `hsl(${265 + colorShift}, 89%, 65%)`; // Purple with shift
+      } else if (text.term.includes("bitcoin") || text.term.includes("NFT")) {
+        color = `hsl(${217 + colorShift}, 91%, 60%)`; // Blue with shift
+      } else {
+        color = `hsl(${238 + colorShift}, 84%, 67%)`; // Indigo with shift
+      }
+      
+      ctx.fillStyle = color;
       ctx.fillText(text.term, text.x, text.y);
+      
+      // Add subtle glow effect
+      ctx.shadowColor = color;
+      ctx.shadowBlur = 15;
+      ctx.shadowOffsetX = 0;
+      ctx.shadowOffsetY = 0;
     });
     
     requestIdRef.current = requestAnimationFrame(animate);

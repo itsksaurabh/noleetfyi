@@ -78,5 +78,47 @@
 }
 
 .logo-glow {
-  filter: drop-shadow(0 0 10px rgba(35, 197, 98, 0.5));
+  filter: drop-shadow(0 0 15px rgba(139, 92, 246, 0.5));
+}
+
+@keyframes logo-glow {
+  0% { filter: drop-shadow(0 0 15px rgba(139, 92, 246, 0.5)); }
+  33% { filter: drop-shadow(0 0 15px rgba(236, 72, 153, 0.5)); }
+  66% { filter: drop-shadow(0 0 15px rgba(99, 102, 241, 0.5)); }
+  100% { filter: drop-shadow(0 0 15px rgba(139, 92, 246, 0.5)); }
+}
+
+.animate-logo-glow {
+  animation: logo-glow 3s ease-in-out infinite;
+}
+
+/* Enhanced Navbar Styles */
+.nav-glass {
+  @apply bg-black/40 backdrop-blur-md border-b border-white/10;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+}
+
+.nav-button {
+  @apply px-4 py-2 rounded-lg transition-all duration-300
+  hover:bg-purple-500/20 hover:scale-105;
+}
+
+/* Gradient Animations */
+.gradient-text {
+  @apply bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-600;
+  animation: gradient 8s ease infinite;
+}
+
+@keyframes gradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Enhanced Button Styles */
+.btn-gradient {
+  @apply bg-gradient-to-r from-purple-500 to-indigo-600
+  hover:from-purple-600 hover:to-indigo-700
+  transition-all duration-300 transform hover:scale-105
+  shadow-lg hover:shadow-purple-500/25;
 }

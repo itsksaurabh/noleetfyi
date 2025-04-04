@@ -59,6 +59,7 @@ export default {
 					purple: '#8B5CF6',
 					pink: '#EC4899',
 					light: '#EEF2FF',
+					dark: '#1A1F2C',
 				},
 				sidebar: {
 					DEFAULT: 'hsl(var(--sidebar-background))',

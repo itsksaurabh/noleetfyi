@@ -35,6 +35,25 @@ const JobCard = ({
     setIsExpanded(!isExpanded);
   };
 
+  // Generate a consistent abbreviation for the company logo
+  const getAbbreviation = (name: string) => {
+    const words = name.trim().split(' ');
+    if (words.length === 1) {
+      return name.substring(0, 2).toUpperCase();
+    }
+    return words.slice(0, 2).map(word => word.charAt(0)).join('').toUpperCase();
+  };
+
+  // Generate a random color based on company name
+  const getLogoBackground = (name: string) => {
+    const colors = [
+      'bg-blue-600', 'bg-purple-600', 'bg-green-600', 
+      'bg-red-600', 'bg-yellow-600', 'bg-pink-600'
+    ];
+    const index = name.length % colors.length;
+    return colors[index];
+  };
+
   return (
     <>
       <div 
@@ -43,11 +62,11 @@ const JobCard = ({
       >
         <div className="flex justify-between items-start">
           <div className="flex gap-4">
-            <div className="bg-secondary h-12 w-12 rounded-md flex items-center justify-center text-xl font-bold">
+            <div className={`h-12 w-12 rounded-md flex items-center justify-center text-xl font-bold text-white ${getLogoBackground(company)}`}>
               {companyLogo ? (
                 <img src={companyLogo} alt={company} className="h-10 w-10 object-contain" />
               ) : (
-                company.charAt(0)
+                getAbbreviation(company)
               )}
             </div>
             <div>
@@ -63,7 +82,7 @@ const JobCard = ({
         </div>
 
         <div className="mt-4 flex flex-wrap gap-2">
-          {tags.map((tag) => (
+          {tags.slice(0, 3).map((tag) => (
             <Badge key={tag} variant="outline" className="border-gray-700 text-gray-300">
               {tag}
             </Badge>
@@ -104,11 +123,11 @@ const JobCard = ({
           </button>
           
           <div className="flex gap-4 mb-6">
-            <div className="bg-secondary h-16 w-16 rounded-md flex items-center justify-center text-2xl font-bold">
+            <div className={`h-16 w-16 rounded-md flex items-center justify-center text-2xl font-bold text-white ${getLogoBackground(company)}`}>
               {companyLogo ? (
                 <img src={companyLogo} alt={company} className="h-12 w-12 object-contain" />
               ) : (
-                company.charAt(0)
+                getAbbreviation(company)
               )}
             </div>
             <div>
@@ -141,7 +160,7 @@ const JobCard = ({
           </div>
           
           <div className="border-t border-gray-800 pt-6">
-            <h3 className="text-lg font-semibold text-white mb-4">Job Description</h3>
+            <h3 className="text-lg font-semibold text-white mb-4">About This Company</h3>
             <p className="text-gray-300 whitespace-pre-line">{description}</p>
             
             <div className="mt-6 flex gap-4">

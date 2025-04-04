@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Search, Briefcase, Filter } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -7,119 +7,66 @@ import JobCard, { JobCardProps } from '@/components/JobCard';
 import { Badge } from '@/components/ui/badge';
 import JobPostForm from '@/components/JobPostForm';
 import TypedBackground from '@/components/TypedBackground';
+import { fetchJobs } from '@/services/jobService';
 
 const Index = () => {
   const [showJobForm, setShowJobForm] = useState(false);
-
-  // Sample job data with descriptions
-  const JOBS: JobCardProps[] = [
-    {
-      id: '1',
-      title: 'Senior Blockchain Engineer',
-      company: 'Ethereum Foundation',
-      companyLogo: '',
-      location: 'Worldwide',
-      salary: '$120K - $180K',
-      tags: ['Smart Contracts', 'Solidity', 'Ethereum'],
-      isRemote: true,
-      isFeatured: true,
-      postedAt: '2 days ago',
-      description: `About the Role:
-We're looking for a Senior Blockchain Engineer to join our team working on core Ethereum infrastructure. You'll be responsible for designing, implementing, and optimizing smart contracts and decentralized applications.
-
-Requirements:
-• 3+ years experience with Solidity and EVM
-• Strong understanding of blockchain fundamentals
-• Experience with DeFi protocols
-• Excellent problem-solving skills
-
-Benefits:
-• Competitive salary and token incentives
-• Flexible remote work
-• Conference and learning budgets
-• Work on cutting-edge technology with global impact`
-    },
-    {
-      id: '2',
-      title: 'Crypto Marketing Manager',
-      company: 'Binance',
-      companyLogo: '',
-      location: 'Singapore',
-      salary: '$90K - $120K',
-      tags: ['Marketing', 'Social Media', 'Growth'],
-      isRemote: true,
-      isFeatured: false,
-      postedAt: '3 days ago',
-      description: `About the Role:
-Lead our marketing efforts across all channels to drive growth and engagement. Work closely with product and community teams to create compelling campaigns that resonate with crypto enthusiasts.
-
-Requirements:
-• 4+ years in digital marketing, preferably in crypto/fintech
-• Experience growing communities on Twitter, Discord, and Telegram
-• Understanding of crypto markets and terminology
-• Data-driven approach to campaign optimization
-
-Benefits:
-• Competitive compensation package with BNB tokens
-• Health insurance and wellness benefits
-• Remote work policy
-• Professional development opportunities`
-    },
-    {
-      id: '3',
-      title: 'Frontend Developer - DeFi Focus',
-      company: 'Uniswap Labs',
-      companyLogo: '',
-      location: 'New York',
-      salary: '$110K - $150K',
-      tags: ['React', 'Web3.js', 'DeFi'],
-      isRemote: true,
-      isFeatured: false,
-      postedAt: '1 week ago',
-      description: `About the Role:
-Join our product team to build intuitive, user-friendly interfaces for DeFi applications. You'll work directly on the Uniswap frontend, focusing on performance optimization and user experience.
-
-Requirements:
-• Strong experience with React, TypeScript, and modern JavaScript
-• Knowledge of Web3.js, ethers.js, or similar libraries
-• Understanding of DeFi concepts and user flows
-• Passion for building accessible, responsive web applications
-
-Benefits:
-• Competitive salary and equity
-• Flexible work arrangements
-• Health, dental, and vision insurance
-• 401k matching
-• Home office stipend`
-    },
-    {
-      id: '4',
-      title: 'Product Designer - NFT Marketplace',
-      company: 'OpenSea',
-      companyLogo: '',
-      location: 'Los Angeles',
-      salary: '$100K - $140K',
-      tags: ['UI/UX', 'NFT', 'Product Design'],
-      isRemote: false,
-      isFeatured: false,
-      postedAt: '2 weeks ago',
-      description: `About the Role:
-Design beautiful, intuitive experiences for the world's largest NFT marketplace. You'll collaborate with product managers and engineers to define features, create wireframes, and deliver high-fidelity designs.
-
-Requirements:
-• 3+ years of product design experience
-• Strong portfolio showcasing UX/UI design work
-• Experience with Figma, Sketch, or similar tools
-• Understanding of web3 and NFT ecosystem is a plus
-
-Benefits:
-• Competitive salary and equity
-• Full health, dental, and vision coverage
-• Unlimited PTO policy
-• Regular team retreats and events
-• Education stipend`
+  const [jobs, setJobs] = useState<JobCardProps[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filteredJobs, setFilteredJobs] = useState<JobCardProps[]>([]);
+  const [activeFilter, setActiveFilter] = useState<string | null>(null);
+  
+  useEffect(() => {
+    const loadJobs = async () => {
+      setLoading(true);
+      try {
+        const jobData = await fetchJobs();
+        setJobs(jobData);
+        setFilteredJobs(jobData);
+      } catch (error) {
+        console.error('Failed to load jobs:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    loadJobs();
+  }, []);
+  
+  useEffect(() => {
+    // Filter jobs when search term or active filter changes
+    let result = jobs;
+    
+    if (searchTerm) {
+      result = result.filter(job => 
+        job.company.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        job.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        job.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        job.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()))
+      );
     }
-  ];
+    
+    if (activeFilter) {
+      if (activeFilter === 'Remote') {
+        result = result.filter(job => job.isRemote);
+      } else if (activeFilter === 'Featured') {
+        result = result.filter(job => job.isFeatured);
+      } else {
+        result = result.filter(job => job.tags.includes(activeFilter));
+      }
+    }
+    
+    setFilteredJobs(result);
+  }, [searchTerm, activeFilter, jobs]);
+  
+  const handleSearch = () => {
+    // The filtering is handled in the useEffect
+  };
+  
+  const toggleFilter = (filter: string) => {
+    setActiveFilter(activeFilter === filter ? null : filter);
+  };
 
   return (
     <div className="min-h-screen bg-noleet-dark text-white relative overflow-x-hidden">
@@ -163,31 +110,72 @@ Benefits:
                     type="text" 
                     placeholder="Job title, keywords, or company" 
                     className="bg-secondary border-gray-700 pl-10"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
                   />
                 </div>
                 <div className="flex gap-2">
-                  <Button variant="outline" className="border-gray-700 text-gray-300 flex gap-2">
+                  <Button 
+                    variant="outline" 
+                    className="border-gray-700 text-gray-300 flex gap-2"
+                    onClick={() => setActiveFilter(null)}
+                  >
                     <Filter size={16} />
-                    Filter
+                    Clear Filter
                   </Button>
-                  <Button className="btn-gradient min-w-[100px]">
+                  <Button 
+                    className="btn-gradient min-w-[100px]"
+                    onClick={handleSearch}
+                  >
                     Search
                   </Button>
                 </div>
               </div>
               
               <div className="flex flex-wrap gap-2">
-                <Badge className="bg-secondary text-gray-300 hover:bg-secondary/80">Remote</Badge>
-                <Badge className="bg-secondary text-gray-300 hover:bg-secondary/80">Full-time</Badge>
-                <Badge className="bg-secondary text-gray-300 hover:bg-secondary/80">Engineering</Badge>
-                <Badge className="bg-secondary text-gray-300 hover:bg-secondary/80">Marketing</Badge>
+                <Badge 
+                  className={`${activeFilter === 'Remote' ? 'bg-noleet-blue text-white' : 'bg-secondary text-gray-300'} hover:bg-secondary/80 cursor-pointer`}
+                  onClick={() => toggleFilter('Remote')}
+                >
+                  Remote
+                </Badge>
+                <Badge 
+                  className={`${activeFilter === 'Featured' ? 'bg-noleet-blue text-white' : 'bg-secondary text-gray-300'} hover:bg-secondary/80 cursor-pointer`}
+                  onClick={() => toggleFilter('Featured')}
+                >
+                  Featured
+                </Badge>
+                <Badge 
+                  className={`${activeFilter === 'Engineering' ? 'bg-noleet-blue text-white' : 'bg-secondary text-gray-300'} hover:bg-secondary/80 cursor-pointer`}
+                  onClick={() => toggleFilter('Engineering')}
+                >
+                  Engineering
+                </Badge>
+                <Badge 
+                  className={`${activeFilter === 'Frontend' ? 'bg-noleet-blue text-white' : 'bg-secondary text-gray-300'} hover:bg-secondary/80 cursor-pointer`}
+                  onClick={() => toggleFilter('Frontend')}
+                >
+                  Frontend
+                </Badge>
               </div>
               
-              <div className="space-y-4">
-                {JOBS.map(job => (
-                  <JobCard key={job.id} {...job} />
-                ))}
-              </div>
+              {loading ? (
+                <div className="flex justify-center py-12">
+                  <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-noleet-blue"></div>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {filteredJobs.length > 0 ? (
+                    filteredJobs.map(job => (
+                      <JobCard key={job.id} {...job} />
+                    ))
+                  ) : (
+                    <div className="glass-card p-8 text-center">
+                      <p className="text-lg text-gray-400">No jobs found matching your criteria.</p>
+                    </div>
+                  )}
+                </div>
+              )}
             </>
           )}
         </div>

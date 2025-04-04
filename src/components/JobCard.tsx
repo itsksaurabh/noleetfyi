@@ -16,6 +16,8 @@ export interface JobCardProps {
   postedAt: string;
   description: string;
   requirements: string[];
+  onTagClick?: (tag: string) => void;
+  onCompanyClick?: (company: string) => void;
 }
 
 const JobCard = ({
@@ -29,7 +31,9 @@ const JobCard = ({
   isFeatured,
   postedAt,
   description,
-  requirements
+  requirements,
+  onTagClick,
+  onCompanyClick
 }: JobCardProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
@@ -64,7 +68,14 @@ const JobCard = ({
       >
         <div className="flex justify-between items-start">
           <div className="flex gap-4">
-            <div className={`h-12 w-12 rounded-md flex items-center justify-center text-xl font-bold text-white ${getLogoBackground(company)}`}>
+            <div 
+              className={`h-12 w-12 rounded-md flex items-center justify-center text-xl font-bold text-white ${getLogoBackground(company)} cursor-pointer hover:opacity-80 transition-opacity duration-200`}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                onCompanyClick?.(company);
+              }}
+            >
               {companyLogo ? (
                 <img src={companyLogo} alt={company} className="h-10 w-10 object-contain" />
               ) : (
@@ -73,7 +84,16 @@ const JobCard = ({
             </div>
             <div>
               <h3 className="text-lg font-semibold text-white">{title}</h3>
-              <p className="text-gray-400">{company}</p>
+              <p 
+                className="text-gray-400 hover:text-noleet-blue cursor-pointer transition-colors duration-200"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  onCompanyClick?.(company);
+                }}
+              >
+                {company}
+              </p>
             </div>
           </div>
           {isFeatured && (
@@ -85,7 +105,15 @@ const JobCard = ({
 
         <div className="mt-4 flex flex-wrap gap-2">
           {tags.slice(0, 3).map((tag) => (
-            <Badge key={tag} variant="outline" className="border-gray-700 text-gray-300">
+            <Badge 
+              key={tag} 
+              variant="outline" 
+              className="border-gray-700 text-gray-300 cursor-pointer hover:bg-noleet-blue/20 hover:text-noleet-blue hover:border-noleet-blue transition-all duration-200"
+              onClick={(e) => {
+                e.stopPropagation();
+                onTagClick?.(tag);
+              }}
+            >
               {tag}
             </Badge>
           ))}
@@ -155,7 +183,15 @@ const JobCard = ({
 
             <div className="flex flex-wrap gap-2">
               {tags.map((tag) => (
-                <Badge key={tag} variant="outline" className="border-gray-700 text-gray-300">
+                <Badge 
+                  key={tag} 
+                  variant="outline" 
+                  className="border-gray-700 text-gray-300 cursor-pointer hover:bg-noleet-blue/20 hover:text-noleet-blue hover:border-noleet-blue transition-all duration-200"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onTagClick?.(tag);
+                  }}
+                >
                   {tag}
                 </Badge>
               ))}

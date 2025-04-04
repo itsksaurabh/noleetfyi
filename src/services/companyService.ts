@@ -15,6 +15,7 @@ export interface Company {
   headquarters: string;
   size: string;
   website: string;
+  logo?: string;
   tags: string[];
   noWhiteboard: boolean;
   interviewProcess: string[];

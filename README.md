@@ -21,8 +21,8 @@ NoLeet is a modern job board platform connecting talent with opportunities in th
 
 1. Clone the repository
 ```bash
-git clone https://github.com/itsksaurabh/crypto-career-connect.git
-cd crypto-career-connect
+git clone https://github.com/itsksaurabh/noleet.git
+cd noleet
 ```
 
 2. Install dependencies

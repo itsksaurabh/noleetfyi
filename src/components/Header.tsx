@@ -9,7 +9,7 @@ const Header = () => {
       <div className="container mx-auto flex items-center justify-between py-4">
         <div className="flex items-center gap-2">
           <Link to="/" className="flex items-center">
-            <img src="/crypto-career-connect/logo/logo.png" alt="Logo" className="h-8 w-auto logo-glow animate-logo-glow" onError={(e) => e.currentTarget.style.display = 'none'} />
+            <img src="/noleet/logo/logo.png" alt="Logo" className="h-8 w-auto logo-glow animate-logo-glow" onError={(e) => e.currentTarget.style.display = 'none'} />
           </Link>
           <span className="bg-noleet-light text-noleet-purple text-xs py-1 px-2 rounded-full font-medium">
             BETA

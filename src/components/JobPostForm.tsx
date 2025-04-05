@@ -61,13 +61,45 @@ const JobPostForm = ({ onClose }: JobPostFormProps) => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (validateForm()) {
-      // Mock form submission
-      toast.success("Job posted successfully! We'll review and publish it soon.");
-      onClose();
-    } else {
+    if (!validateForm()) {
       toast.error('Please fill in all required fields correctly.');
+      return;
     }
+
+    // Generate a unique job ID
+    const jobId = `JOB-${Date.now()}`;
+    
+    // Generate application link
+    const applicationLink = `${window.location.origin}/jobs/${jobId}`;
+
+    // Prepare email body with job details
+    const emailBody = `
+Job Posting Request
+------------------
+Job ID: ${jobId}
+Application Link: ${applicationLink}
+
+Company Details:
+- Company: ${formData.company}
+- Position: ${formData.position}
+- Location: ${formData.location}
+- Salary Range: ${formData.salary || 'Not specified'}
+- Contact Email: ${formData.email}
+
+Job Description:
+${formData.description}
+
+Note: Once approved, the job will be accessible at ${applicationLink}
+`;
+
+    // Create mailto link
+    const mailtoLink = `mailto:itsksaurabh@gmail.com?subject=New Job Posting: ${formData.position} at ${formData.company}&body=${encodeURIComponent(emailBody)}`;
+
+    // Open email client
+    window.location.href = mailtoLink;
+    
+    toast.success('Opening your email client to submit the job posting...');
+    onClose();
   };
 
   return (

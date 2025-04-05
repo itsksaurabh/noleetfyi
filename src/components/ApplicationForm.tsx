@@ -90,7 +90,7 @@ const ApplicationForm: React.FC<ApplicationFormProps> = ({ jobTitle, company, on
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!validateForm()) {
@@ -98,19 +98,44 @@ const ApplicationForm: React.FC<ApplicationFormProps> = ({ jobTitle, company, on
       return;
     }
 
-    setIsSubmitting(true);
-    
-    try {
-      // Mock API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      toast.success('Application submitted successfully!');
-      onClose();
-    } catch (error) {
-      toast.error('Failed to submit application. Please try again.');
-    } finally {
-      setIsSubmitting(false);
+    // Generate unique application ID
+    const applicationId = `APP-${Date.now()}`;
+
+    // Prepare email body with application details
+    const emailBody = `
+Job Application
+--------------
+Application ID: ${applicationId}
+
+Position Details:
+- Job Title: ${jobTitle}
+- Company: ${company}
+
+Applicant Information:
+- Full Name: ${formData.fullName}
+- Email: ${formData.email}
+- Phone: ${formData.phone || 'Not provided'}
+
+Cover Letter:
+${formData.coverLetter || 'Not provided'}
+
+Note: Resume is attached to this email.
+`;
+
+    // Create form data for file attachment
+    const formDataToSend = new FormData();
+    if (formData.resume) {
+      formDataToSend.append('resume', formData.resume);
     }
+
+    // Create mailto link
+    const mailtoLink = `mailto:itsksaurabh@gmail.com?subject=Job Application: ${jobTitle} at ${company}&body=${encodeURIComponent(emailBody)}`;
+
+    // Open email client
+    window.location.href = mailtoLink;
+    
+    toast.success('Opening your email client...');
+    onClose();
   };
 
   return (

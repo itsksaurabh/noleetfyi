@@ -1,6 +1,7 @@
 import yaml from 'js-yaml';
 
 export interface Job {
+  id: string;
   title: string;
   location: string;
   type: string;
@@ -54,6 +55,7 @@ export const getCompanies = async (): Promise<Company[]> => {
         if (jobsFiles[jobsPath]) {
           const jobsData = yaml.load(jobsFiles[jobsPath]) as { jobs: Job[] };
           jobs = jobsData.jobs.map(job => ({
+            id: `${companyInfo.name.toLowerCase().replace(/\s+/g, '-')}-${job.title.toLowerCase().replace(/\s+/g, '-')}`,
             title: job.title || '',
             location: job.location || 'Remote',
             type: job.type || 'Full-time',

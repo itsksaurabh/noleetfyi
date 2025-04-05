@@ -1,11 +1,12 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
-import { Badge } from "./ui/badge";
-import { Button } from "./ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { ExternalLink, ChevronDown, ChevronUp } from "lucide-react";
 import { Company } from "@/services/companyService";
 import { useState } from "react";
 import CompanyLogo from "./CompanyLogo";
 import { motion, AnimatePresence } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 
 interface CompanyCardProps {
   company: Company;
@@ -15,6 +16,7 @@ interface CompanyCardProps {
 }
 
 export function CompanyCard({ company, onTagClick, expanded = false, onToggleExpand }: CompanyCardProps) {
+  const navigate = useNavigate();
   const [showJobs, setShowJobs] = useState(false);
   const [isExpanded, setIsExpanded] = useState(expanded);
 
@@ -24,13 +26,22 @@ export function CompanyCard({ company, onTagClick, expanded = false, onToggleExp
   };
 
   return (
-    <Card 
-      className={`w-full transition-all duration-300 ${isExpanded ? 'shadow-xl' : 'hover:shadow-lg'}`}
-      onClick={() => {
-        setIsExpanded(!isExpanded);
-        onToggleExpand?.();
+    <motion.div
+      layout
+      animate={{
+        scale: isExpanded ? 1 : 0.98,
+        borderRadius: isExpanded ? 12 : 8
       }}
+      transition={{ duration: 0.3, ease: "easeInOut" }}
+      className="w-full"
     >
+      <Card 
+        className={`w-full overflow-hidden ${isExpanded ? 'shadow-xl' : 'hover:shadow-lg hover:scale-[1.02] transition-transform'}`}
+        onClick={() => {
+          setIsExpanded(!isExpanded);
+          onToggleExpand?.();
+        }}
+      >
       <CardHeader>
         <div className="flex justify-between items-start">
           <div className="flex items-start gap-4">
@@ -50,13 +61,19 @@ export function CompanyCard({ company, onTagClick, expanded = false, onToggleExp
           </Button>
         </div>
       </CardHeader>
-      <CardContent className={`transition-all duration-300 ${isExpanded ? 'max-h-full' : 'max-h-[300px] overflow-hidden'}`}>
-        <AnimatePresence>
+      <CardContent>
+        <AnimatePresence mode="wait">
           <motion.div 
             className="space-y-4"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ 
+              opacity: 1, 
+              y: 0,
+              height: isExpanded ? 'auto' : '100px',
+              overflow: isExpanded ? 'visible' : 'hidden'
+            }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.3, ease: "easeInOut" }}
           >
             <div>
               <h3 className="font-medium mb-2">Interview Process</h3>
@@ -114,10 +131,14 @@ export function CompanyCard({ company, onTagClick, expanded = false, onToggleExp
                       {company.jobs.map((job, index) => (
                         <motion.li 
                           key={index} 
-                          className="border rounded-md p-3 hover:border-primary/50 transition-colors"
+                          className="border rounded-md p-3 hover:border-primary/50 transition-colors cursor-pointer"
                           initial={{ opacity: 0, y: -10 }}
                           animate={{ opacity: 1, y: 0 }}
                           transition={{ delay: index * 0.1 }}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            navigate(`/jobs/${job.id}`);
+                          }}
                         >
                           <div className="font-medium text-foreground">{job.title}</div>
                           <div className="text-xs mt-1">{job.location} · {job.type}</div>
@@ -161,5 +182,6 @@ export function CompanyCard({ company, onTagClick, expanded = false, onToggleExp
         </AnimatePresence>
       </CardContent>
     </Card>
+    </motion.div>
   );
 }

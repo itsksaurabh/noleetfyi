@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { MapPin, Clock, Briefcase, X, DollarSign, CheckCircle } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 export interface JobCardProps {
   id: string;
@@ -21,6 +22,7 @@ export interface JobCardProps {
 }
 
 const JobCard = ({
+  id,
   title,
   company,
   companyLogo,
@@ -35,6 +37,7 @@ const JobCard = ({
   onTagClick,
   onCompanyClick
 }: JobCardProps) => {
+  const navigate = useNavigate();
   const [isExpanded, setIsExpanded] = useState(false);
 
   const toggleExpanded = () => {
@@ -64,7 +67,7 @@ const JobCard = ({
     <>
       <div 
         className={`glass-card p-6 card-hover relative transform transition-all duration-300 ease-in-out hover:scale-[1.02] ${isFeatured ? 'border-noleet-blue border-2' : ''} ${isExpanded ? 'opacity-0 h-0 overflow-hidden' : 'opacity-100'}`}
-        onClick={toggleExpanded}
+        onClick={() => navigate(`/jobs/${id}`)}
       >
         <div className="flex justify-between items-start">
           <div className="flex gap-4">

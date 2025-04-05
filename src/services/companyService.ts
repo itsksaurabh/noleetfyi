@@ -49,12 +49,22 @@ export const getCompanies = async (): Promise<Company[]> => {
     for (const infoPath in infoFiles) {
       try {
         const companyInfo = yaml.load(infoFiles[infoPath]) as Omit<Company, 'jobs'>;
-        const jobsPath = infoPath.replace('info.yaml', 'jobs.yaml');
         
+        // Validate required company info fields
+        if (!companyInfo.name || !companyInfo.description || !companyInfo.headquarters || !companyInfo.size || !companyInfo.website) {
+          console.error(`Skipping invalid company data at ${infoPath}: missing required fields`);
+          continue;
+        }
+
+        const jobsPath = infoPath.replace('info.yaml', 'jobs.yaml');
         let jobs: Job[] = [];
         if (jobsFiles[jobsPath]) {
           const jobsData = yaml.load(jobsFiles[jobsPath]) as { jobs: Job[] };
-          jobs = jobsData.jobs.map(job => ({
+          if (!Array.isArray(jobsData.jobs)) {
+            console.error(`Skipping invalid jobs data at ${jobsPath}: jobs is not an array`);
+            continue;
+          }
+          jobs = jobsData.jobs.filter(job => job && job.title && job.description).map(job => ({
             id: `${companyInfo.name.toLowerCase().replace(/\s+/g, '-')}-${job.title.toLowerCase().replace(/\s+/g, '-')}`,
             title: job.title || '',
             location: job.location || 'Remote',

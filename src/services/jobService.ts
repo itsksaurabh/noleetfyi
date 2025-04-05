@@ -21,17 +21,20 @@ export async function fetchJobs(): Promise<JobData[]> {
     const jobs: JobData[] = [];
 
     companies.forEach((company: Company) => {
-      company.jobs.forEach((job: Job, index: number) => {
+      if (!company.jobs) return;
+      
+      company.jobs.forEach((job: Job) => {
+        const jobId = `${company.name.toLowerCase().replace(/\s+/g, '-')}-${job.title.toLowerCase().replace(/\s+/g, '-')}`;
         jobs.push({
-          id: `${company.name.toLowerCase()}-${index}`,
+          id: jobId,
           company: company.name,
           title: job.title,
-          location: job.location,
+          location: job.location || 'Remote',
           description: job.description,
-          tags: company.tags,
-          isRemote: job.location.toLowerCase().includes('remote'),
-          isFeatured: Math.random() > 0.7,
-          postedAt: `${Math.floor(Math.random() * 14) + 1} ${Math.random() > 0.5 ? 'days' : 'weeks'} ago`,
+          tags: [...company.tags, ...job.requirements],
+          isRemote: (job.location || '').toLowerCase().includes('remote'),
+          isFeatured: true,
+          postedAt: 'Recently posted',
           requirements: job.requirements,
           salary: job.salary
         });

@@ -62,7 +62,7 @@ export function CompanyCard({ company, onTagClick, expanded = false, onToggleExp
         </div>
       </CardHeader>
       <CardContent>
-        <AnimatePresence mode="wait">
+        <AnimatePresence>
           <motion.div 
             className="space-y-4"
             initial={{ opacity: 0, y: 20 }}

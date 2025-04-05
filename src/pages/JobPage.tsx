@@ -1,10 +1,12 @@
-import React from 'react';
 import { useParams } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 import { Badge } from '@/components/ui/badge';
-import { MapPin, Clock, Briefcase, DollarSign } from 'lucide-react';
-import CompanyLogo from '@/components/CompanyLogo';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { MapPin, DollarSign, Clock, Briefcase } from 'lucide-react';
+import CompanyLogo from '@/components/CompanyLogo';
+import ApplicationForm from '@/components/ApplicationForm';
+import { fetchJobs } from '@/services/jobService';
 
 interface JobPageProps {
   id: string;
@@ -21,24 +23,49 @@ interface JobPageProps {
 }
 
 const JobPage = () => {
+  const [showApplicationForm, setShowApplicationForm] = useState(false);
+  const [job, setJob] = useState<JobPageProps | null>(null);
+  const [loading, setLoading] = useState(true);
   const { id } = useParams();
-  // TODO: Fetch job details using the id
-  const job: JobPageProps = {
-    id: '1',
-    title: 'Senior Frontend Developer',
-    company: 'Example Corp',
-    location: 'Remote',
-    salary: '$120k - $150k',
-    tags: ['React', 'TypeScript', 'Web3'],
-    isRemote: true,
-    postedAt: '2d ago',
-    description: 'We are looking for a Senior Frontend Developer...',
-    requirements: [
-      'Strong experience with React and TypeScript',
-      'Experience with Web3 technologies',
-      '5+ years of professional experience'
-    ]
-  };
+
+  useEffect(() => {
+    const loadJob = async () => {
+      if (!id) return;
+      try {
+        const jobs = await fetchJobs();
+        const foundJob = jobs.find(j => j.id === id);
+        if (foundJob) {
+          setJob({
+            ...foundJob,
+            companyLogo: undefined // Add company logo handling if needed
+          });
+        }
+      } catch (error) {
+        console.error('Error loading job:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadJob();
+  }, [id]);
+
+  if (loading) {
+    return (
+      <div className="container mx-auto px-4 py-8 flex justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-noleet-blue"></div>
+      </div>
+    );
+  }
+
+  if (!job) {
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <Card className="w-full max-w-4xl mx-auto p-8 text-center">
+          <p className="text-lg text-gray-400">Job not found.</p>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -95,9 +122,21 @@ const JobPage = () => {
             </ul>
           </section>
 
-          <Button className="w-full mt-6" size="lg">
+          <Button 
+            className="w-full mt-6" 
+            size="lg" 
+            onClick={() => setShowApplicationForm(true)}
+          >
             Apply Now
           </Button>
+
+          {showApplicationForm && (
+            <ApplicationForm
+              jobTitle={job.title}
+              company={job.company}
+              onClose={() => setShowApplicationForm(false)}
+            />
+          )}
         </CardContent>
       </Card>
     </div>

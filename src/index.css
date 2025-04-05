@@ -46,7 +46,13 @@
   }
 
   body {
-    @apply bg-noleet-dark text-foreground;
+    @apply bg-noleet-dark text-foreground min-h-screen overflow-x-hidden;
+    position: relative;
+    z-index: 0;
+  }
+
+  .content-wrapper {
+    @apply opacity-80 hover:opacity-100 transition-opacity duration-300;
   }
 }
 
@@ -74,7 +80,11 @@
 }
 
 .glass-card {
-  @apply bg-black/20 backdrop-blur-lg border border-white/10 rounded-lg;
+  @apply bg-black/20 backdrop-blur-lg border border-white/10 rounded-lg opacity-60;
+}
+
+.glass-card:hover {
+  @apply opacity-100 transition-opacity duration-300;
 }
 
 .logo-glow {
@@ -94,8 +104,12 @@
 
 /* Enhanced Navbar Styles */
 .nav-glass {
-  @apply bg-black/40 backdrop-blur-md border-b border-white/10;
+  @apply bg-black/40 backdrop-blur-md border-b border-white/10 opacity-60;
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+}
+
+.nav-glass:hover {
+  @apply opacity-100 transition-opacity duration-300;
 }
 
 .nav-button {

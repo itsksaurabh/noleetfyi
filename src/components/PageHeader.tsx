@@ -26,7 +26,7 @@ const PageHeader = ({ showJobForm, toggleJobForm }: PageHeaderProps) => {
     <motion.header
       initial={{ y: -100 }}
       animate={{ y: 0 }}
-      className={`sticky top-0 z-50 transition-all duration-300 ${isScrolled ? 'bg-black/80 shadow-lg shadow-purple-500/10' : 'bg-transparent'}`}
+      className={`sticky top-0 z-50 transition-all duration-300 opacity-60 hover:opacity-100 ${isScrolled ? 'bg-black/80 shadow-lg shadow-purple-500/10' : 'bg-transparent'}`}
     >
       <div className="container mx-auto">
         <nav className="flex items-center justify-between py-4 px-6">
